@@ -17,9 +17,11 @@
   },
   "license": "MIT",
   "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rhythmictech/lambda-aws-secure-ssh-key"
+  },
   "scripts": {
-    "build": "node-lambda package -e production -x 'event.json build.env bin .github' -I lambci/lambda:build-nodejs12.x",
-    "run": "node-lambda run",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "version": "1.0.0"
