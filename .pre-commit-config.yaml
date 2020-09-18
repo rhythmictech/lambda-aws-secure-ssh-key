@@ -1,0 +1,43 @@
+repos:
+  - repo: https://github.com/pre-commit/mirrors-eslint
+    rev: ""
+    hooks:
+      - id: eslint
+        additional_dependencies:
+          - eslint@7.3.1
+          - eslint-config-standard@14.1.1
+          - eslint-plugin-import@2.21.2
+          - eslint-plugin-node@11.1.0
+          - eslint-plugin-promise@4.2.1
+          - eslint-plugin-standard@4.0.1
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v3.0.0
+    hooks:
+      - id: check-case-conflict
+      - id: check-json
+      - id: check-merge-conflict
+      - id: check-symlinks
+      - id: check-yaml
+        args:
+          - --unsafe
+      - id: end-of-file-fixer
+      - id: mixed-line-ending
+        args:
+          - --fix=lf
+      - id: no-commit-to-branch
+        args:
+          - --branch
+          - main
+          - --branch
+          - master
+          - --branch
+          - prod
+      - id: pretty-format-json
+        exclude: package-lock.json$
+        args:
+          - --autofix
+          - --top-keys=name,Name
+      - id: trailing-whitespace
+        args:
+          - --markdown-linebreak-ext=md
+        exclude: README.md

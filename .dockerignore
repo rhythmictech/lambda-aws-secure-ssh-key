@@ -1,0 +1,12 @@
+.dockerignore
+.eslintrc.yml
+.git
+.github
+.gitignore
+.pre-commit-config.yaml
+.vscode
+.yamllint.yml
+Dockerfile
+README.md
+build
+node_modules

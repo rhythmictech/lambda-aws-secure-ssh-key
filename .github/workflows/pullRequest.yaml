@@ -1,0 +1,77 @@
+---
+name: pull request
+on:
+  pull_request:
+
+jobs:
+  pre-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - name: pre-commit
+        uses: pre-commit/action@v2.0.0
+        env:
+          # skip eslint because reviewdog handles it
+          SKIP: >-
+            eslint,
+            no-commit-to-branch
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        if: ${{ failure() }}
+        with:
+          commit_message: Apply automatic changes
+          commit_options: "--no-verify"
+          # Optional commit user and author settings
+          commit_user_name: Linter Bot
+          commit_user_email: noreply@rhythmictech.com
+          commit_author: Linter Bot <actions@github.com>
+  misspell:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: misspell
+        uses: reviewdog/action-misspell@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          locale: "US"
+          reporter: github-pr-check
+          filter_mode: added
+          level: error
+  yamllint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: yamllint
+        uses: reviewdog/action-yamllint@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          reporter: github-pr-check
+          filter_mode: added
+          level: error
+  eslint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: eslint
+        uses: reviewdog/action-yamllint@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          reporter: github-pr-check
+          filter_mode: added
+          level: error
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: build in docker
+        run: docker build . -t artifact
+      - uses: shrink/actions-docker-extract@v1
+        with:
+          image: "artifact"
+          path: "/var/task/lambda.zip"
+      - name: upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: lambda.zip
+          path: ${{ github.workspace }}/lambda.zip
+          if-no-files-found: error
