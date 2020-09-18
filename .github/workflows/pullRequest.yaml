@@ -69,6 +69,10 @@ jobs:
         with:
           image: "artifact"
           path: "/var/task/lambda.zip"
+      - name: debug dir
+        run: |
+          pwd
+          ls -la
       - name: upload artifact
         uses: actions/upload-artifact@v2
         with:
