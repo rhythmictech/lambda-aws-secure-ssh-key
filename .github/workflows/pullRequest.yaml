@@ -69,6 +69,8 @@ jobs:
         with:
           image: "artifact"
           path: "/var/task/lambda.zip"
+      - name: move zip
+        run: mv .extracted-*/lambda.zip lambda.zip
       - name: upload artifact
         uses: actions/upload-artifact@v2
         with:
