@@ -9,7 +9,7 @@ const bits = process.env.KEY_BITS || 2048
 
 exports.handler = async (event, context) => {
   try {
-    const keypair = rsa.generateKeyPair({ bits, e: 0x10001 })
+    const keypair = rsa.generateKeyPair({ bits: bits, e: 0x10001 })
     await secretsmanager.putSecretValue({
       SecretId: event.pubkey_secret_name,
       SecretString: forge.ssh.publicKeyToOpenSSH(keypair.publicKey)
