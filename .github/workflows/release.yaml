@@ -15,16 +15,27 @@ jobs:
         with:
           image: "artifact"
           path: "/var/task/lambda.zip"
-      - name: move zip
-        run: mv .extracted-*/lambda.zip lambda.zip
-      - name: upload artifact
+      - name: upload zip artifact
         uses: actions/upload-artifact@v2
         with:
           name: lambda.zip
           path: ${{ github.workspace }}/lambda.zip
           if-no-files-found: error
-      - name: Upload Release Asset
-        id: upload-release-asset
+      - name: move zip
+        run: mv .extracted-*/lambda.zip lambda.zip
+
+      - name: get checksum
+        run: cat lambda.zip | openssl dgst -binary -sha256 | base64 > lambda.sha256base64
+
+      - name: upload shasum artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: lambda.sha256base64
+          path: ${{ github.workspace }}/lambda.zip
+          if-no-files-found: error
+
+      - name: Upload Zip Release Asset
+        id: release-zip
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -33,3 +44,14 @@ jobs:
           asset_path: ./lambda.zip
           asset_name: lambda.zip
           asset_content_type: application/zip
+
+      - name: Upload Shasum Release Asset
+        id: release-shasum
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./lambda.sha256base64
+          asset_name: lambda.sha256base64
+          asset_content_type: text/plain
