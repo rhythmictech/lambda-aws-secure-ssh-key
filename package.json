@@ -2,7 +2,7 @@
   "name": "lambda-ssh-key-secret",
   "author": "Scott Miller",
   "dependencies": {
-    "aws-sdk": "^2.814.0",
+    "aws-sdk": "^2.1354.0",
     "node-forge": "^1.3.0"
   },
   "description": "Generates an ssh key, saves it to a secret, and returns metadata about the secret",
